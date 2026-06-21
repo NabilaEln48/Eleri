@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eleri Tech — Building the operating layer for hiring, growth, and capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #FFFFFF;
+    --bg-sunken:    #FBFBFA;
+    --bg-tint:      #F5F5FD;
+    --bg-dark:      #0B0F19;
+    --bg-dark-card: #131926;
+    --ink:          #1A1A1F;
+    --ink-soft:     #55555F;
+    --ink-faint:    #8A8A94;
+    --ink-light:    #E2E8F0;
+    --ink-light-soft: #94A3B8;
+    --line:         #EBEBEF;
+    --line-strong:  #DCDCE4;
+    --line-dark:    #1E293B;
+    --brand:        #5E6AD2;
+    --brand-ink:    #4A55B8;
+    --brand-tint:   #ECECFB;
+
+    --elensi:       #C5602A;
+    --elensi-tint:  #FBF1EA;
+    --growth:       #1E8A6E;
+    --growth-tint:  #EAF6F1;
+    --finance:      #2563A8;
+    --finance-tint: #EAF2FB;
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Inter Tight', 'Inter', -apple-system, sans-serif;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  
+  .wrap{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  @media (max-width:680px){
+    .wrap{ padding: 0 20px; }
+  }
+
+  /* ---------- Alternating Sections ---------- */
+  .section-light {
+    background: var(--bg);
+    color: var(--ink);
+    padding: 100px 0;
+  }
+  .section-dark {
+    background: var(--bg-dark);
+    color: #fff;
+    padding: 100px 0;
+  }
+
+  /* ---------- Nav ---------- */
+  .nav{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.78);
+    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height: 64px;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .logo-mark{
+    width: 22px; height: 22px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, var(--brand) 0%, #8B93E8 100%);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .logo-mark svg{ width:12px; height:12px; }
+
+  .nav-links{ display:flex; align-items:center; gap: 36px; }
+  .nav-links a{ font-size: 14px; font-weight: 500; color: var(--ink-soft); transition: color .15s ease; }
+  .nav-links a:hover{ color: var(--ink); }
+
+  .nav-actions{ display:flex; align-items:center; gap:18px; }
+  .nav-signin{ font-size:14px; font-weight:500; color:var(--ink-soft); }
+  
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .15s ease;
+    white-space:nowrap;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary{ background: var(--ink); color: #fff; }
+  .btn-primary:hover{ background:#000; transform: translateY(-1px); }
+  .btn-ghost{ background: var(--bg-sunken); border: 1px solid var(--line-strong); color: var(--ink); }
+  .btn-accent { background: #EAA056; color: #000; font-weight: 700; }
+  .btn-accent:hover { background: #f1b374; }
+
+  /* ---------- Hero with Circular Background ---------- */
+  .hero{
+    position: relative;
+    padding: 140px 0 100px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .hero-bg-graphic {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 900px;
+    height: 100%;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-inner{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .hero h1{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(36px, 5.8vw, 64px);
+    line-height: 1.07;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    max-width: 800px;
+  }
+  .hero h1 .accent{ color: var(--brand); }
+  .hero p{ margin-top: 24px; font-size: 19px; line-height: 1.6; color: var(--ink-soft); max-width: 600px; }
+  .hero-ctas{ display:flex; gap: 12px; margin-top: 36px; }
+
+  /* ---------- Section Headers ---------- */
+  .section-head{ max-width: 650px; margin-bottom: 56px; }
+  .section-head.center { margin: 0 auto 56px; text-align: center; }
+  .section-eyebrow{ font-size: 12px; font-weight: 700; color: #EAA056; letter-spacing: 0.05em; margin-bottom: 14px; text-transform: uppercase; }
+  .section-head h2{ font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 3.8vw, 42px); letter-spacing: -0.025em; line-height: 1.15; }
+  .section-head p{ margin-top: 16px; font-size: 17px; line-height: 1.6; }
+  .section-light .section-head p { color: var(--ink-soft); }
+  .section-dark .section-head p { color: var(--ink-light-soft); }
+
+  /* ---------- About Section ---------- */
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .about-left p { font-size: 18px; color: var(--ink-light-soft); line-height: 1.65; margin-bottom: 32px; }
+  .io-flex-card {
+    background: var(--bg-dark-card);
+    border: 1px solid var(--line-dark);
+    padding: 24px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    color: var(--ink-light-soft);
+  }
+  .io-flex-card strong { color: #EAA056; }
+  .features-stack { display: flex; flex-direction: column; gap: 16px; }
+  .feature-item-box {
+    background: var(--bg-dark-card);
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    gap: 20px;
+  }
+  .feature-num { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--brand); }
+  .feature-item-box h4 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .feature-item-box p { font-size: 14px; color: var(--ink-light-soft); line-height: 1.5; }
+
+  /* ---------- Core Section ---------- */
+  .core-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .core-steps { display: flex; flex-direction: column; gap: 28px; }
+  .core-step { display: flex; gap: 18px; }
+  .core-step-icon {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--brand-tint);
+    color: var(--brand-ink); display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .core-step h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .core-step p { font-size: 15px; color: var(--ink-soft); line-height: 1.5; }
+  
+  .core-visual-container { display: flex; justify-content: center; position: relative; }
+  .core-circle-graphic { width: 100%; max-width: 380px; height: auto; }
+
+  /* ---------- Products Layout (3 Columns Grid) ---------- */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .product-card {
+    background: var(--bg-dark-card);
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .product-card.live { border-color: rgba(234, 160, 86, 0.4); }
+  .product-card.live:hover { transform: translateY(-4px); }
+  
+  .card-badge {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .badge-live { background: rgba(234, 160, 86, 0.15); color: #EAA056; }
+  .badge-locked { background: rgba(255, 255, 255, 0.08); color: var(--ink-light-soft); }
+  
+  .product-card h3 { font-family: var(--font-display); font-size: 26px; font-weight: 700; margin-bottom: 12px; color: #fff; }
+  .product-card .desc { font-size: 14.5px; color: var(--ink-light-soft); line-height: 1.6; margin-bottom: 32px; }
+  
+  .product-card.blur-layer { filter: grayscale(0.4); }
+  .product-card.blur-layer .card-content-wrap { opacity: 0.45; pointer-events: none; }
+  .product-card.blur-layer .lock-notice {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; z-index: 2; padding: 20px; text-align: center;
+  }
+  .lock-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .lock-notice p { font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 16px; }
+
+  /* ---------- CTA ---------- */
+  .cta-section { text-align: center; padding: 120px 0; background: var(--bg); }
+  .cta-section h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.03em; max-width: 700px; margin: 0 auto 18px; }
+  .cta-section p { font-size: 18px; color: var(--ink-soft); max-width: 500px; margin: 0 auto 36px; }
+
+  /* ---------- Footer ---------- */
+  footer{ padding: 64px 0 40px; border-top: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  .footer-top{ display:grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 32px; padding-bottom: 48px; }
+  .footer-brand p{ margin-top: 14px; font-size: 14px; color: var(--ink-faint); max-width: 260px; line-height: 1.6; }
+  .footer-col h5{ font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 16px; }
+  .footer-col ul{ display:flex; flex-direction:column; gap: 11px; }
+  .footer-col a{ font-size: 14px; color: var(--ink-faint); transition: color .15s ease; }
+  .footer-col a:hover{ color: var(--ink); }
+  .footer-bottom{ display:flex; align-items:center; justify-content:space-between; padding-top: 28px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-faint); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 960px){
+    .products-grid { grid-template-columns: 1fr; gap: 24px; }
+    .about-layout, .core-layout { grid-template-columns: 1fr; gap: 40px; }
+    .nav-links { display: none; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+      </span>
+      ELERI TECH
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#core">The Core</a></li>
+      <li><a href="#products">Products</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="#" class="btn btn-primary btn-sm">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+  <header class="hero">
+    <div class="hero-bg-graphic" aria-hidden="true">
+      <svg viewBox="0 0 860 860" fill="none" style="width:100%; height:100%;">
+        <circle cx="430" cy="430" r="320" stroke="var(--brand)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <circle cx="430" cy="430" r="200" stroke="var(--brand)" stroke-width="1" />
+        <circle cx="430" cy="430" r="40" fill="var(--brand-tint)"/>
+        <circle cx="430" cy="430" r="20" fill="var(--brand)"/>
+        <path d="M 430 110 A 320 320 0 0 1 750 430" stroke="var(--brand)" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="wrap hero-inner">
+      <h1>Hire well. Grow faster.<br>Invest <span class="accent">smarter</span>.</h1>
+      <p>Eleri Tech builds the AI infrastructure behind how companies hire, market, and manage capital — working from one unified architecture layer.</p>
+      <div class="hero-ctas">
+        <a href="#products" class="btn btn-primary">Explore Products</a>
+        <a href="#about" class="btn btn-ghost">Learn More</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section-dark" id="about">
+    <div class="wrap about-layout">
+      <div class="about-left">
+        <div class="section-head">
+          <div class="section-eyebrow">About Eleri</div>
+          <h2>Built by an operator, not a slide deck.</h2>
+        </div>
+        <p>Eleri Tech was founded to solve a simple problem: most software inside companies doesn't learn. It runs the same rules forever. Eleri's engines are designed to absorb every decision a team makes — and apply that judgment automatically, faster, every cycle after.</p>
+        <div class="io-flex-card">
+          Founded and engineered solo from Ottawa, Canada — architecture, backend, and product design built in-house from day one. Accepted into <strong>Invest Ottawa's IO Flex</strong> program, with pilot companies already lined up for Elensi's launch.
+        </div>
+      </div>
+      <div class="features-stack">
+        <div class="feature-item-box">
+          <div class="feature-num">01</div>
+          <div>
+            <h4>One engine, many verticals</h4>
+            <p>The same core learning architecture powers hiring, finance, and growth — each tuned to its industry's data and decisions.</p>
+          </div>
+        </div>
+        <div class="feature-item-box">
+          <div class="feature-num">02</div>
+          <div>
+            <h4>No filters, full context</h4>
+            <p>Elensi reads every resume as written — no ATS keyword games. The model adapts to the data, not the other way around.</p>
+          </div>
+        </div>
+        <div class="feature-item-box">
+          <div class="feature-num">03</div>
+          <div>
+            <h4>Gets sharper with use</h4>
+            <p>Every accepted or rejected match, every flagged trade, every approved campaign — feeds back into the core.</p>
+          </div>
+        </div>
+        <div class="feature-item-box">
+          <div class="feature-num">04</div>
+          <div>
+            <h4>Built for real teams</h4>
+            <p>HR managers, traders, and marketing leads get plain-language reports — not dashboards full of numbers nobody reads.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light" id="core">
+    <div class="wrap core-layout">
+      <div>
+        <div class="section-head">
+          <div class="section-eyebrow">The Core</div>
+          <h2>One brain. It just wears different hats.</h2>
+          <p>Every Eleri product runs on the same underlying learning core — the part that watches decisions, finds patterns, and improves the next recommendation.</p>
+        </div>
+        <div class="core-steps">
+          <div class="core-step">
+            <div class="core-step-icon">1</div>
+            <div>
+              <h4>Ingest</h4>
+              <p>Raw, unfiltered data — resumes, trade logs, campaign data — goes in exactly as it exists, no pre-cleaning required.</p>
+            </div>
+          </div>
+          <div class="core-step">
+            <div class="core-step-icon">2</div>
+            <div>
+              <h4>Learn</h4>
+              <p>The core watches what humans approve, reject, or change — and quietly adjusts its own weighting.</p>
+            </div>
+          </div>
+          <div class="core-step">
+            <div class="core-step-icon">3</div>
+            <div>
+              <h4>Apply</h4>
+              <p>Recommendations, shortlists, and reports get sharper every cycle — without retraining or manual tuning.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="core-visual-container">
+        <svg class="core-circle-graphic" viewBox="0 0 400 400" fill="none">
+          <circle cx="200" cy="200" r="140" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="5 5" />
+          <circle cx="200" cy="200" r="50" fill="var(--ink)" />
+          <text x="200" y="195" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="700" fill="#fff" letter-spacing="0.05em">LEARNING</text>
+          <text x="200" y="212" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="700" fill="#EAA056" letter-spacing="0.05em">CORE</text>
+          
+          <circle cx="200" cy="60" r="6" fill="var(--brand)" />
+          <text x="200" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-soft)">INGEST</text>
+          
+          <circle cx="60" cy="200" r="6" fill="var(--brand)" />
+          <text x="60" y="222" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-soft)">LEARN</text>
+          
+          <circle cx="340" cy="200" r="6" fill="#EAA056" />
+          <text x="340" y="222" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-soft)">APPLY</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark" id="products">
+    <div class="wrap">
+      <div class="section-head center">
+        <div class="section-eyebrow">Products</div>
+        <h2>Three verticals. One growing core.</h2>
+      </div>
+      
+      <div class="products-grid">
+        <div class="product-card live">
+          <div class="card-content-wrap">
+            <span class="card-badge badge-live">EE — Live</span>
+            <h3>Elensi</h3>
+            <p class="desc">AI hiring engine that reads every resume as written — no ATS filters. Companies upload everything they receive; Elensi returns a ranked shortlist with full match reports.</p>
+          </div>
+          <a href="https://elensi.online" target="_blank" class="btn btn-accent">Visit Elensi →</a>
+        </div>
+
+        <div class="product-card blur-layer">
+          <div class="card-content-wrap">
+            <span class="card-badge badge-locked">EG — Landing Page</span>
+            <h3>Eleri Growth</h3>
+            <p class="desc">Autonomous growth layer matching high-converting audience routing architectures and multi-channel campaign adjustments dynamically without operational delays.</p>
+          </div>
+          <div class="lock-notice">
+            <div class="lock-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <p>Landing page ready for information</p>
+            <a href="https://eleri-growth.vercel.app" target="_blank" class="btn btn-ghost btn-sm" style="background:#fff; color:#000;">View Landing Page</a>
+          </div>
+        </div>
+
+        <div class="product-card blur-layer">
+          <div class="card-content-wrap">
+            <span class="card-badge badge-locked">EF — Coming Soon</span>
+            <h3>Eleri Finance</h3>
+            <p class="desc">AI-guided investment management parsing algorithmic tracking loops with fully auditable plain-text reasoning files directly compiled for cross-border asset traders.</p>
+          </div>
+          <div class="lock-notice">
+            <div class="lock-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <p>Coming Soon</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="wrap">
+      <h2>Run hiring, growth, and finance from one layer you trust.</h2>
+      <p>Start with the product you need most. The rest is ready when you are.</p>
+      <div class="hero-ctas" style="justify-content: center;">
+        <a href="#products" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#top" class="logo">
+          <span class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+          </span>
+          ELERI TECH
+        </a>
+        <p>Building the foundational AI intelligence layer across standard enterprise operational pipelines.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Products</h5>
+        <ul>
+          <li><a href="https://elensi.online" target="_blank">Elensi</a></li>
+          <li><a href="https://eleri-growth.vercel.app" target="_blank">Eleri Growth</a></li>
+          <li><a href="#products">Eleri Finance</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Navigation</h5>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#core">The Core</a></li>
+          <li><a href="#products">Products</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Eleri Tech, Inc. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
